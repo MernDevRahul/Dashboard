@@ -8,9 +8,16 @@ import "lightgallery/css/lightgallery.css";
 import "lightgallery/css/lg-zoom.css";
 import "lightgallery/css/lg-thumbnail.css";
 import App from "./App.jsx";
+import "./global.css"
+import { ToastContainer } from "react-toastify";
+import { Provider } from "react-redux";
+import { store } from "./redux/store.js";
 
 createRoot(document.getElementById("root")).render(
   <>
-    <App />
+  <Provider store={store}>
+  <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />
+  <App />
+  </Provider>
   </>
 );
