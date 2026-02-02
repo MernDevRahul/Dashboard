@@ -16,6 +16,20 @@ export const login = createAsyncThunk(
     }
   },
 );
+export const loginout = createAsyncThunk(
+  "/auth/logout",
+  async (credentials, { rejectWithValue }) => {
+    try {
+      const res = await axios.post("/auth/logout");
+      toast.success("Logged Out successful");
+      return true;
+    } catch (error) {
+      // console.log(error?.response?.data?.message)
+      toast.error(error?.response?.data?.message);
+      return rejectWithValue(error?.response?.data);
+    }
+  },
+);
 
 export const fetchOwner = createAsyncThunk(
   "/auth/fetch-owner",

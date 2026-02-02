@@ -9,12 +9,13 @@ const UnitCountSeven = () => {
                 <div className='d-flex flex-wrap align-items-center justify-content-between gap-1 mb-8'>
                   <div>
                     <span className='mb-2 fw-medium text-secondary-light text-md'>
-                      Gross Sales
+                      Total Clients
                     </span>
-                    <h6 className='fw-semibold mb-1'>$40,000</h6>
+                    <h6 className='fw-semibold mb-1'>50</h6>
                   </div>
                   <span className='w-44-px h-44-px radius-8 d-inline-flex justify-content-center align-items-center text-2xl mb-12 bg-primary-100 text-primary-600'>
-                    <i className='ri-shopping-cart-fill' />
+                    {/* <i className='ri-shopping-cart-fill' /> */}
+                    <i className='ri-service-fill' />
                   </span>
                 </div>
                 <p className='text-sm mb-0'>
@@ -30,12 +31,13 @@ const UnitCountSeven = () => {
                 <div className='d-flex flex-wrap align-items-center justify-content-between gap-1 mb-8'>
                   <div>
                     <span className='mb-2 fw-medium text-secondary-light text-md'>
-                      Total Purchase
+                      Total Seasons
                     </span>
-                    <h6 className='fw-semibold mb-1'>$35,000</h6>
+                    <h6 className='fw-semibold mb-1'>38</h6>
                   </div>
                   <span className='w-44-px h-44-px radius-8 d-inline-flex justify-content-center align-items-center text-2xl mb-12 bg-lilac-200 text-lilac-600'>
-                    <i className='ri-handbag-fill' />
+                    {/* <i className='ri-handbag-fill' /> */}
+                    <i className='ri-calendar-event-fill' />
                   </span>
                 </div>
                 <p className='text-sm mb-0'>
@@ -51,12 +53,13 @@ const UnitCountSeven = () => {
                 <div className='d-flex flex-wrap align-items-center justify-content-between gap-1 mb-8'>
                   <div>
                     <span className='mb-2 fw-medium text-secondary-light text-md'>
-                      Total Income
+                      Total Admins
                     </span>
-                    <h6 className='fw-semibold mb-1'>$30,000</h6>
+                    <h6 className='fw-semibold mb-1'>45</h6>
                   </div>
                   <span className='w-44-px h-44-px radius-8 d-inline-flex justify-content-center align-items-center text-2xl mb-12 bg-success-200 text-success-600'>
-                    <i className='ri-shopping-cart-fill' />
+                    {/* <i className='ri-shopping-cart-fill' /> */}
+                    <i className='ri-user-settings-fill' />
                   </span>
                 </div>
                 <p className='text-sm mb-0'>
@@ -72,12 +75,13 @@ const UnitCountSeven = () => {
                 <div className='d-flex flex-wrap align-items-center justify-content-between gap-1 mb-8'>
                   <div>
                     <span className='mb-2 fw-medium text-secondary-light text-md'>
-                      Total Expense
+                      Total Contests
                     </span>
-                    <h6 className='fw-semibold mb-1'>$7,000</h6>
+                    <h6 className='fw-semibold mb-1'>15</h6>
                   </div>
                   <span className='w-44-px h-44-px radius-8 d-inline-flex justify-content-center align-items-center text-2xl mb-12 bg-warning-focus text-warning-600'>
-                    <i className='ri-shopping-cart-fill' />
+                    {/* <i className='ri-shopping-cart-fill' /> */}
+                    <i className='ri-trophy-fill' />
                   </span>
                 </div>
                 <p className='text-sm mb-0'>

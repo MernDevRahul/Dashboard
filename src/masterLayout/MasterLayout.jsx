@@ -126,7 +126,16 @@ const MasterLayout = ({ children }) => {
         </div>
         <div className='sidebar-menu-area'>
           <ul className='sidebar-menu' id='sidebar-menu'>
-            <li className='dropdown'>
+            <li>
+              <NavLink
+                to='/'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon='mage:email' className='menu-icon' />
+                <span>DashBoard</span>
+              </NavLink>
+            </li>
+            {/* <li className=''>
               <Link to='#'>
                 <Icon
                   icon='solar:home-smile-angle-outline'
@@ -257,9 +266,9 @@ const MasterLayout = ({ children }) => {
                   </NavLink>
                 </li>
               </ul>
-            </li>
+            </li> */}
 
-            <li className='sidebar-menu-group-title'>Application</li>
+            {/* <li className='sidebar-menu-group-title'>Application</li> */}
             <li>
               <NavLink
                 to='/email'
@@ -474,7 +483,7 @@ const MasterLayout = ({ children }) => {
               </ul>
             </li>
 
-            <li className='sidebar-menu-group-title'>UI Elements</li>
+            {/* <li className='sidebar-menu-group-title'>UI Elements</li> */}
 
             {/* Components Dropdown */}
             <li className='dropdown'>
@@ -948,7 +957,7 @@ const MasterLayout = ({ children }) => {
               </ul>
             </li>
 
-            <li className='sidebar-menu-group-title'>Application</li>
+            {/* <li className='sidebar-menu-group-title'>Application</li> */}
 
             {/* Authentication Dropdown */}
             <li className='dropdown'>
@@ -1934,7 +1943,7 @@ const MasterLayout = ({ children }) => {
                           Setting
                         </Link>
                       </li>
-                      <li>
+                      <li onClick={()=>{}}>
                         <Link
                           className='dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3'
                           to='#'
@@ -1959,11 +1968,11 @@ const MasterLayout = ({ children }) => {
         <footer className='d-footer'>
           <div className='row align-items-center justify-content-between'>
             <div className='col-auto'>
-              <p className='mb-0'>© 2025 WowDash. All Rights Reserved.</p>
+              <p className='mb-0'>© {new Date().getFullYear()} ScanToVote. All Rights Reserved.</p>
             </div>
             <div className='col-auto'>
               <p className='mb-0'>
-                Made by <span className='text-primary-600'>wowtheme7</span>
+                Made by <span className='text-primary-600'>Rahul Shrivastav</span>
               </p>
             </div>
           </div>
