@@ -9,8 +9,8 @@ const ForgotPasswordLayer = () => {
         <div className='auth-left d-lg-block d-none'>
           <div className='d-flex align-items-center flex-column h-100 justify-content-center'>
             <img
-              src='assets/images/auth/forgot-pass-img.png'
-              alt='WowDash React Vite'
+              src='assets/logo/logo.png'
+              alt='Scan to Vote'
             />
           </div>
         </div>

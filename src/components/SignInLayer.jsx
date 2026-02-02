@@ -183,7 +183,7 @@ const SignInLayer = () => {
             <div className="">
               <div className="d-flex justify-content-between gap-2">
                 <div className="form-check style-check d-flex align-items-center"></div>
-                <Link to="#" className="text-primary-600 fw-medium">
+                <Link to="/forgot-password" className="text-primary-600 fw-medium">
                   Forgot Password?
                 </Link>
               </div>

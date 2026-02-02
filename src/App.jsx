@@ -95,6 +95,7 @@ import ComingSoonPage from "./pages/ComingSoonPage";
 import AccessDeniedPage from "./pages/AccessDeniedPage";
 import MaintenancePage from "./pages/MaintenancePage";
 import BlankPagePage from "./pages/BlankPagePage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 function App() {
   return (
@@ -141,6 +142,7 @@ function App() {
         <Route exact path='/email' element={<EmailPage />} />
         <Route exact path='/faq' element={<FaqPage />} />
         <Route exact path='/forgot-password' element={<ForgotPasswordPage />} />
+        <Route exact path='/reset-password' element={<ResetPasswordPage />} />
         <Route exact path='/form-layout' element={<FormLayoutPage />} />
         <Route exact path='/form-validation' element={<FormValidationPage />} />
         <Route exact path='/form' element={<FormPage />} />
