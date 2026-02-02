@@ -142,7 +142,7 @@ function App() {
         <Route exact path='/email' element={<EmailPage />} />
         <Route exact path='/faq' element={<FaqPage />} />
         <Route exact path='/forgot-password' element={<ForgotPasswordPage />} />
-        <Route exact path='/reset-password' element={<ResetPasswordPage />} />
+        <Route exact path='/reset-password/:token' element={<ResetPasswordPage />} />
         <Route exact path='/form-layout' element={<FormLayoutPage />} />
         <Route exact path='/form-validation' element={<FormValidationPage />} />
         <Route exact path='/form' element={<FormPage />} />
