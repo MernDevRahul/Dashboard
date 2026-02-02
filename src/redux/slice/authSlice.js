@@ -16,7 +16,7 @@ export const login = createAsyncThunk(
     }
   },
 );
-export const loginout = createAsyncThunk(
+export const logoutThunk = createAsyncThunk(
   "/auth/logout",
   async (credentials, { rejectWithValue }) => {
     try {
@@ -36,7 +36,7 @@ export const fetchOwner = createAsyncThunk(
   async (__dirname, { rejectWithValue }) => {
     try {
       const response = await axios.get("/auth/fetch-owner");
-      console.log("Fetch Owner", response?.data);
+      if(response?.data?.success)
       return response?.data?.data;
     } catch (error) {
       return rejectWithValue(error?.response?.data);
@@ -52,9 +52,9 @@ const authSlice = createSlice({
     error: null,
   },
   reducers: {
-    logout: (state) => {
-      state.user = null;
-    },
+    // logout: (state) => {
+    //   state.user = null;
+    // },
   },
   extraReducers: (builder) => {
     builder
@@ -67,6 +67,18 @@ const authSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(logoutThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(logoutThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = null;
+      })
+      .addCase(logoutThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

@@ -3,11 +3,17 @@ import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import ThemeToggleButton from "../helper/ThemeToggleButton";
+import { useDispatch } from "react-redux";
+import { logoutThunk } from "../redux/slice/authSlice";
+import { useSelector } from "react-redux";
 
 const MasterLayout = ({ children }) => {
+  const dispatch = useDispatch()
+  const { user } = useSelector((state)=> state.auth)
   let [sidebarActive, seSidebarActive] = useState(false);
   let [mobileMenu, setMobileMenu] = useState(false);
   const location = useLocation(); // Hook to get the current route
+  console.log(user)
 
   useEffect(() => {
     const handleDropdownClick = (event) => {
@@ -1893,10 +1899,10 @@ const MasterLayout = ({ children }) => {
                     <div className='py-12 px-16 radius-8 bg-primary-50 mb-16 d-flex align-items-center justify-content-between gap-2'>
                       <div>
                         <h6 className='text-lg text-primary-light fw-semibold mb-2'>
-                          Shaidul Islam
+                          {user?.name}
                         </h6>
                         <span className='text-secondary-light fw-medium text-sm'>
-                          Admin
+                          {user?.role}
                         </span>
                       </div>
                       <button type='button' className='hover-text-danger'>
@@ -1943,10 +1949,12 @@ const MasterLayout = ({ children }) => {
                           Setting
                         </Link>
                       </li>
-                      <li onClick={()=>{}}>
+                      <li onClick={()=>{
+                        dispatch(logoutThunk())
+                      }}>
                         <Link
                           className='dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3'
-                          to='#'
+                          to='/sign-in'
                         >
                           <Icon icon='lucide:power' className='icon text-xl' />{" "}
                           Log Out
