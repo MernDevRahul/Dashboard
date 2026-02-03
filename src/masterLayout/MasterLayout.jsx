@@ -1,19 +1,28 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import ThemeToggleButton from "../helper/ThemeToggleButton";
 import { useDispatch } from "react-redux";
-import { logoutThunk } from "../redux/slice/authSlice";
+import { fetchOwner, logoutThunk } from "../redux/slice/authSlice";
 import { useSelector } from "react-redux";
 
 const MasterLayout = ({ children }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state)=> state.auth)
+  const navigate = useNavigate()
   let [sidebarActive, seSidebarActive] = useState(false);
   let [mobileMenu, setMobileMenu] = useState(false);
   const location = useLocation(); // Hook to get the current route
-  console.log(user)
+
+  useEffect(()=>{
+    if(user == null){
+      dispatch(fetchOwner());
+    }
+    if(!user){
+      navigate('/sign-in')
+    }
+  },[user])
 
   useEffect(() => {
     const handleDropdownClick = (event) => {
@@ -141,140 +150,17 @@ const MasterLayout = ({ children }) => {
                 <span>DashBoard</span>
               </NavLink>
             </li>
-            {/* <li className=''>
-              <Link to='#'>
-                <Icon
-                  icon='solar:home-smile-angle-outline'
-                  className='menu-icon'
-                />
-                <span>Dashboard</span>
-              </Link>
-              <ul className='sidebar-submenu'>
-                <li>
-                  <NavLink
-                    to='/'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-primary-600 w-auto' />
-                    AI
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to='/index-2'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-warning-main w-auto' />{" "}
-                    CRM
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to='/index-3'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-info-main w-auto' />{" "}
-                    eCommerce
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to='/index-4'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-danger-main w-auto' />
-                    Cryptocurrency
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to='/index-5'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-success-main w-auto' />{" "}
-                    Investment
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to='/index-6'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-purple w-auto' />{" "}
-                    LMS
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to='/index-7'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-info-main w-auto' />{" "}
-                    NFT &amp; Gaming
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to='/index-8'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-info-main w-auto' />{" "}
-                    Medical
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to='/index-9'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-info-main w-auto' />{" "}
-                    Analytics
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to='/index-10'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-info-main w-auto' />{" "}
-                    POS & Inventory
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to='/index-11'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-info-main w-auto' />{" "}
-                    Finance & Banking
-                  </NavLink>
-                </li>
-              </ul>
-            </li> */}
-
-            {/* <li className='sidebar-menu-group-title'>Application</li> */}
+            <li>
+              <NavLink
+                to='/client'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon='mage:user
+                
+                ' className='menu-icon' />
+                <span>Client</span>
+              </NavLink>
+            </li>
             <li>
               <NavLink
                 to='/email'

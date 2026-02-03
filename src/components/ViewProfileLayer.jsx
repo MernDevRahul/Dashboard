@@ -1,9 +1,11 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const ViewProfileLayer = () => {
+  const { user } = useSelector((state)=> state.auth);
   const [imagePreview, setImagePreview] = useState(
-    "assets/images/user-grid/user-grid-img13.png"
+    "https://cdn-icons-png.flaticon.com/512/9187/9187604.png"
   );
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
@@ -32,20 +34,20 @@ const ViewProfileLayer = () => {
       <div className='col-lg-4'>
         <div className='user-grid-card position-relative border radius-16 overflow-hidden bg-base h-100'>
           <img
-            src='assets/images/user-grid/user-grid-bg1.png'
-            alt='WowDash React Vite'
+            src='/assets/logo/logo.png'
+            alt={ user?.name }
             className='w-100 object-fit-cover'
           />
           <div className='pb-24 ms-16 mb-24 me-16  mt--100'>
             <div className='text-center border border-top-0 border-start-0 border-end-0'>
               <img
-                src='assets/images/user-grid/user-grid-img14.png'
+                src={imagePreview}
                 alt='WowDash React Vite'
                 className='border br-white border-width-2-px w-200-px h-200-px rounded-circle object-fit-cover'
               />
-              <h6 className='mb-0 mt-16'>Jacob Jones</h6>
+              <h6 className='mb-0 mt-16'>{ user?.name }</h6>
               <span className='text-secondary-light mb-16'>
-                ifrandom@gmail.com
+                { user?.email }
               </span>
             </div>
             <div className='mt-24'>
@@ -56,7 +58,7 @@ const ViewProfileLayer = () => {
                     Full Name
                   </span>
                   <span className='w-70 text-secondary-light fw-medium'>
-                    : Will Jonto
+                    : { user?.name }
                   </span>
                 </li>
                 <li className='d-flex align-items-center gap-1 mb-12'>
@@ -65,7 +67,7 @@ const ViewProfileLayer = () => {
                     Email
                   </span>
                   <span className='w-70 text-secondary-light fw-medium'>
-                    : willjontoax@gmail.com
+                    : { user?.email }
                   </span>
                 </li>
                 <li className='d-flex align-items-center gap-1 mb-12'>
@@ -74,44 +76,16 @@ const ViewProfileLayer = () => {
                     Phone Number
                   </span>
                   <span className='w-70 text-secondary-light fw-medium'>
-                    : (1) 2536 2561 2365
+                    : { user?.phone }
                   </span>
                 </li>
                 <li className='d-flex align-items-center gap-1 mb-12'>
                   <span className='w-30 text-md fw-semibold text-primary-light'>
                     {" "}
-                    Department
+                    Role
                   </span>
                   <span className='w-70 text-secondary-light fw-medium'>
-                    : Design
-                  </span>
-                </li>
-                <li className='d-flex align-items-center gap-1 mb-12'>
-                  <span className='w-30 text-md fw-semibold text-primary-light'>
-                    {" "}
-                    Designation
-                  </span>
-                  <span className='w-70 text-secondary-light fw-medium'>
-                    : UI UX Designer
-                  </span>
-                </li>
-                <li className='d-flex align-items-center gap-1 mb-12'>
-                  <span className='w-30 text-md fw-semibold text-primary-light'>
-                    {" "}
-                    Languages
-                  </span>
-                  <span className='w-70 text-secondary-light fw-medium'>
-                    : English
-                  </span>
-                </li>
-                <li className='d-flex align-items-center gap-1'>
-                  <span className='w-30 text-md fw-semibold text-primary-light'>
-                    {" "}
-                    Bio
-                  </span>
-                  <span className='w-70 text-secondary-light fw-medium'>
-                    : Lorem Ipsum&nbsp;is simply dummy text of the printing and
-                    typesetting industry.
+                    : { user?.role }
                   </span>
                 </li>
               </ul>

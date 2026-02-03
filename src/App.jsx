@@ -96,6 +96,7 @@ import AccessDeniedPage from "./pages/AccessDeniedPage";
 import MaintenancePage from "./pages/MaintenancePage";
 import BlankPagePage from "./pages/BlankPagePage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import ClientPage from "./pages/ClientPage";
 
 function App() {
   return (
@@ -103,6 +104,7 @@ function App() {
       <RouteScrollToTop />
       <Routes>
         <Route exact path='/' element={<HomePageOne />} />
+        <Route exact path='/client' element={<ClientPage />} />
         <Route exact path='/index-2' element={<HomePageTwo />} />
         <Route exact path='/index-3' element={<HomePageThree />} />
         <Route exact path='/index-4' element={<HomePageFour />} />

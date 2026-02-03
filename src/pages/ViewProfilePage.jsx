@@ -8,7 +8,7 @@ const ViewProfilePage = () => {
       {/* MasterLayout */}
       <MasterLayout>
         {/* Breadcrumb */}
-        <Breadcrumb title='View Profile' />
+        <Breadcrumb title='Profile' />
 
         {/* ViewProfileLayer */}
         <ViewProfileLayer />
