@@ -155,9 +155,7 @@ const MasterLayout = ({ children }) => {
                 to='/client'
                 className={(navData) => (navData.isActive ? "active-page" : "")}
               >
-                <Icon icon='mage:user
-                
-                ' className='menu-icon' />
+                <Icon icon='mage:user' className='menu-icon' />
                 <span>Client</span>
               </NavLink>
             </li>
