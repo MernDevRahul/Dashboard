@@ -1,12 +1,11 @@
-import axios from "../utils/axios";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useEffect, useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { fetchOwner, login } from "../redux/slice/authSlice";
+// import { fetchOwner, login } from "../redux/slice/authSlice";
+import { useLazyFetchOwnerQuery, useLoginMutation, useSendOtpMutation, useVerifyOtpMutation } from "../redux/services/authService";
 
 const SignInLayer = () => {
   const [form, setForm] = useState({});
@@ -14,9 +13,13 @@ const SignInLayer = () => {
   const [loading, setLoading] = useState(false);
   const [timer, setTimer] = useState(60);
   const [canResend, setCanResend] = useState(false);
-  const { user } = useSelector((state) => state.auth);
+  // const { user } = useSelector((state) => state.auth);
   const Navigate = useNavigate();
   const dispatch = useDispatch();
+  const [sendOtp] = useSendOtpMutation();
+  const [verifyOtp] = useVerifyOtpMutation();
+  const [loginUser] = useLoginMutation();
+  const [fetchOwner] = useLazyFetchOwnerQuery();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -28,27 +31,32 @@ const SignInLayer = () => {
 
     try {
       if (step === "SEND_OTP") {
-        const res = await axios.post("/auth/send-otp", { email: form.email });
-        if (res?.data?.success) {
+        const res = await sendOtp({ email: form.email }).unwrap();
+        if (res?.success) {
           toast.success("OTP sent to your email");
           setStep("VERIFY_OTP");
           setTimer(60);
           setCanResend(false);
         }
       } else if (step === "VERIFY_OTP") {
-        const res = await axios.post("/auth/verify-otp", {
-          email: form.email,
-          otp: form.otp,
-        });
-        if (res?.data?.success) {
+        const res = await verifyOtp({ email: form.email, otp: form.otp, }).unwrap();
+        if (res?.success) {
           toast.success("OTP verified successfully");
           setStep("LOGIN");
         }
       } else if (step === "LOGIN") {
-        dispatch(login(form));
+        const res = await loginUser(form).unwrap();
+        if(res?.success){
+          toast.success("Login Successful")
+          const owner = await fetchOwner().unwrap();
+          if(owner.success){
+            console.log("owner : ", owner);
+            Navigate("/");
+          }
+        }
       }
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Something went wrong");
+      toast.error(error?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -57,27 +65,27 @@ const SignInLayer = () => {
   const handleResendOtp = async () => {
     try {
       setLoading(true);
-      const res = await axios.post("/auth/send-otp", { email: form.email });
+      const res = await sendOtp({ email: form.email }).unwrap();
 
-      if (res?.data?.success) {
+      if (res?.success) {
         toast.success("OTP resent successfully");
         setTimer(60);
         setCanResend(false);
       }
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Failed to resend OTP");
+      toast.error(error?.data?.message || "Failed to resend OTP");
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (user) {
-      Navigate("/");
-    } else {
-      dispatch(fetchOwner());
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user) {
+  //     Navigate("/");
+  //   } else {
+  //     dispatch(fetchOwner());
+  //   }
+  // }, [user]);
 
   useEffect(() => {
     let interval;
@@ -183,7 +191,10 @@ const SignInLayer = () => {
             <div className="">
               <div className="d-flex justify-content-between gap-2">
                 <div className="form-check style-check d-flex align-items-center"></div>
-                <Link to="/forgot-password" className="text-primary-600 fw-medium">
+                <Link
+                  to="/forgot-password"
+                  className="text-primary-600 fw-medium"
+                >
                   Forgot Password?
                 </Link>
               </div>

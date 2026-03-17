@@ -1,14 +1,18 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useFetchOwnerQuery, useUpdateLoggedInUserMutation } from "../redux/services/authService";
+import { toast } from "react-toastify";
 
+const baseUrl = import.meta.env.VITE_MODE== "DEV" ? import.meta.env.VITE_DEV_BASE_URL : import.meta.env.VITE_PROD_BASE_URL;
+console.log(baseUrl)
 const ViewProfileLayer = () => {
-  const { user } = useSelector((state)=> state.auth);
-  const [imagePreview, setImagePreview] = useState(
-    "https://cdn-icons-png.flaticon.com/512/9187/9187604.png"
-  );
+  const { data, isLoading } = useFetchOwnerQuery()
+  const [imagePreview, setImagePreview] = useState("https://cdn-icons-png.flaticon.com/512/9187/9187604.png");
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+  const [form, setForm ] = useState({})
+  const [file, setFile] = useState(null)
+  const [updateLoggedInUser, { isLoading: isUpdating }] = useUpdateLoggedInUserMutation();
 
   // Toggle function for password field
   const togglePasswordVisibility = () => {
@@ -27,27 +31,73 @@ const ViewProfileLayer = () => {
         setImagePreview(e.target.result);
       };
       reader.readAsDataURL(input.target.files[0]);
+      setFile(input.target.files[0]);
     }
   };
+
+  useEffect(()=>{
+    if(data?.data){
+      setImagePreview(`${baseUrl}${data?.data?.profile}`)
+      setForm({
+        name:data?.data?.name,
+        email:data?.data?.email,
+        phone:data?.data?.phone,
+        role:data?.data?.role,
+      })
+    }
+  },[data])
+
+  const handleUpdateProfile = async (e)=>{
+    e.preventDefault();
+    if (!data?.data?._id) return toast.error("User ID is missing!");
+
+    const formData = new FormData();
+    if (form.name) formData.append("name", form.name);
+    if (form.email) formData.append("email", form.email);
+    if (form.phone) formData.append("phone", form.phone);
+    if (form.password) formData.append("password", form.password);
+    if (form.confirmPassword) formData.append("confirmPassword", form.confirmPassword);
+    
+    if (file) {
+      formData.append("userImage", file);
+    }
+    
+    try {
+      const response = await updateLoggedInUser({
+        id: data.data._id,
+        data: formData
+      }).unwrap();
+      
+      toast.success(response?.message || "Profile updated successfully!");
+    } catch (error) {
+      console.error(error);
+      toast.error(error?.data?.message || "Failed to update profile");
+    }
+  }
+
+  // Loading Fallback
+  if(isLoading){
+    return <div>Loading...</div>
+  }
   return (
     <div className='row gy-4'>
       <div className='col-lg-4'>
         <div className='user-grid-card position-relative border radius-16 overflow-hidden bg-base h-100'>
           <img
             src='/assets/logo/logo.png'
-            alt={ user?.name }
+            alt={ data?.data?.name }
             className='w-100 object-fit-cover'
           />
           <div className='pb-24 ms-16 mb-24 me-16  mt--100'>
             <div className='text-center border border-top-0 border-start-0 border-end-0'>
               <img
-                src={imagePreview}
-                alt='WowDash React Vite'
+                src={`${imagePreview}`}
+                alt={data?.data?.name}
                 className='border br-white border-width-2-px w-200-px h-200-px rounded-circle object-fit-cover'
               />
-              <h6 className='mb-0 mt-16'>{ user?.name }</h6>
+              <h6 className='mb-0 mt-16'>{ data?.data?.name }</h6>
               <span className='text-secondary-light mb-16'>
-                { user?.email }
+                { data?.data?.email }
               </span>
             </div>
             <div className='mt-24'>
@@ -58,7 +108,7 @@ const ViewProfileLayer = () => {
                     Full Name
                   </span>
                   <span className='w-70 text-secondary-light fw-medium'>
-                    : { user?.name }
+                    : { data?.data?.name }
                   </span>
                 </li>
                 <li className='d-flex align-items-center gap-1 mb-12'>
@@ -67,7 +117,7 @@ const ViewProfileLayer = () => {
                     Email
                   </span>
                   <span className='w-70 text-secondary-light fw-medium'>
-                    : { user?.email }
+                    : { data?.data?.email }
                   </span>
                 </li>
                 <li className='d-flex align-items-center gap-1 mb-12'>
@@ -76,7 +126,7 @@ const ViewProfileLayer = () => {
                     Phone Number
                   </span>
                   <span className='w-70 text-secondary-light fw-medium'>
-                    : { user?.phone }
+                    : { data?.data?.phone }
                   </span>
                 </li>
                 <li className='d-flex align-items-center gap-1 mb-12'>
@@ -85,7 +135,7 @@ const ViewProfileLayer = () => {
                     Role
                   </span>
                   <span className='w-70 text-secondary-light fw-medium'>
-                    : { user?.role }
+                    : { data?.data?.role }
                   </span>
                 </li>
               </ul>
@@ -128,21 +178,6 @@ const ViewProfileLayer = () => {
                   tabIndex={-1}
                 >
                   Change Password
-                </button>
-              </li>
-              <li className='nav-item' role='presentation'>
-                <button
-                  className='nav-link d-flex align-items-center px-24'
-                  id='pills-notification-tab'
-                  data-bs-toggle='pill'
-                  data-bs-target='#pills-notification'
-                  type='button'
-                  role='tab'
-                  aria-controls='pills-notification'
-                  aria-selected='false'
-                  tabIndex={-1}
-                >
-                  Notification Settings
                 </button>
               </li>
             </ul>
@@ -191,7 +226,7 @@ const ViewProfileLayer = () => {
                   </div>
                 </div>
                 {/* Upload Image End */}
-                <form action='#'>
+                <form action='#' onSubmit={handleUpdateProfile}>
                   <div className='row'>
                     <div className='col-sm-6'>
                       <div className='mb-20'>
@@ -203,6 +238,8 @@ const ViewProfileLayer = () => {
                           <span className='text-danger-600'>*</span>
                         </label>
                         <input
+                        value={form.name}
+                        onChange={(e)=>setForm({...form,name:e.target.value})}
                           type='text'
                           className='form-control radius-8'
                           id='name'
@@ -219,6 +256,8 @@ const ViewProfileLayer = () => {
                           Email <span className='text-danger-600'>*</span>
                         </label>
                         <input
+                        value={form.email}
+                        onChange={(e)=>setForm({...form,email:e.target.value})}
                           type='email'
                           className='form-control radius-8'
                           id='email'
@@ -235,7 +274,9 @@ const ViewProfileLayer = () => {
                           Phone
                         </label>
                         <input
-                          type='email'
+                        value={form.phone}
+                        onChange={(e)=>setForm({...form,phone:e.target.value})}
+                          type='number'
                           className='form-control radius-8'
                           id='number'
                           placeholder='Enter phone number'
@@ -245,99 +286,19 @@ const ViewProfileLayer = () => {
                     <div className='col-sm-6'>
                       <div className='mb-20'>
                         <label
-                          htmlFor='depart'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          Department
-                          <span className='text-danger-600'>*</span>{" "}
-                        </label>
-                        <select
-                          className='form-control radius-8 form-select'
-                          id='depart'
-                          defaultValue='Select Event Title'
-                        >
-                          <option value='Select Event Title' disabled>
-                            Select Event Title
-                          </option>
-                          <option value='Enter Event Title'>
-                            Enter Event Title
-                          </option>
-                          <option value='Enter Event Title One'>
-                            Enter Event Title One
-                          </option>
-                          <option value='Enter Event Title Two'>
-                            Enter Event Title Two
-                          </option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className='col-sm-6'>
-                      <div className='mb-20'>
-                        <label
                           htmlFor='desig'
                           className='form-label fw-semibold text-primary-light text-sm mb-8'
                         >
-                          Designation
+                          Role
                           <span className='text-danger-600'>*</span>{" "}
                         </label>
-                        <select
-                          className='form-control radius-8 form-select'
-                          id='desig'
-                          defaultValue='Select Designation Title'
-                        >
-                          <option value='Select Designation Title' disabled>
-                            Select Designation Title
-                          </option>
-                          <option value='Enter Designation Title'>
-                            Enter Designation Title
-                          </option>
-                          <option value='Enter Designation Title One'>
-                            Enter Designation Title One
-                          </option>
-                          <option value='Enter Designation Title Two'>
-                            Enter Designation Title Two
-                          </option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className='col-sm-6'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='Language'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          Language
-                          <span className='text-danger-600'>*</span>{" "}
-                        </label>
-                        <select
-                          className='form-control radius-8 form-select'
-                          id='Language'
-                          defaultValue='Select Language'
-                        >
-                          <option value='Select Language' disabled>
-                            Select Language
-                          </option>
-                          <option value='English'>English</option>
-                          <option value='Bangla'>Bangla</option>
-                          <option value='Hindi'>Hindi</option>
-                          <option value='Arabic'>Arabic</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className='col-sm-12'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='desc'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          Description
-                        </label>
-                        <textarea
-                          name='#0'
+                        < input
+                        type="text"
+                        value={form.role}
+                        onChange={(e)=>setForm({...form,role:e.target.value})}
                           className='form-control radius-8'
-                          id='desc'
-                          placeholder='Write description...'
-                          defaultValue={""}
+                          id='desig'
+                          disabled
                         />
                       </div>
                     </div>
@@ -350,10 +311,11 @@ const ViewProfileLayer = () => {
                       Cancel
                     </button>
                     <button
-                      type='button'
+                      disabled={isUpdating}
+                      type='submit'
                       className='btn btn-primary border border-primary-600 text-md px-56 py-12 radius-8'
                     >
-                      Save
+                      {isUpdating ? "Saving..." : "Save"}
                     </button>
                   </div>
                 </form>
@@ -365,7 +327,8 @@ const ViewProfileLayer = () => {
                 aria-labelledby='pills-change-passwork-tab'
                 tabIndex='0'
               >
-                <div className='mb-20'>
+                <form action="#" onSubmit={handleUpdateProfile}>
+                  <div className='mb-20'>
                   <label
                     htmlFor='your-password'
                     className='form-label fw-semibold text-primary-light text-sm mb-8'
@@ -374,6 +337,8 @@ const ViewProfileLayer = () => {
                   </label>
                   <div className='position-relative'>
                     <input
+                      name="password"
+                      onChange={(e)=>setForm({...form,password:e.target.value})}
                       type={passwordVisible ? "text" : "password"}
                       className='form-control radius-8'
                       id='your-password'
@@ -397,6 +362,8 @@ const ViewProfileLayer = () => {
                   </label>
                   <div className='position-relative'>
                     <input
+                      name="confirmPassword"
+                      onChange={(e)=>setForm({...form,confirmPassword:e.target.value})}
                       type={confirmPasswordVisible ? "text" : "password"}
                       className='form-control radius-8'
                       id='confirm-password'
@@ -412,102 +379,23 @@ const ViewProfileLayer = () => {
                     ></span>
                   </div>
                 </div>
-              </div>
-              <div
-                className='tab-pane fade'
-                id='pills-notification'
-                role='tabpanel'
-                aria-labelledby='pills-notification-tab'
-                tabIndex={0}
-              >
-                <div className='form-switch switch-primary py-12 px-16 border radius-8 position-relative mb-16'>
-                  <label
-                    htmlFor='companzNew'
-                    className='position-absolute w-100 h-100 start-0 top-0'
-                  />
-                  <div className='d-flex align-items-center gap-3 justify-content-between'>
-                    <span className='form-check-label line-height-1 fw-medium text-secondary-light'>
-                      Company News
-                    </span>
-                    <input
-                      className='form-check-input'
-                      type='checkbox'
-                      role='switch'
-                      id='companzNew'
-                    />
+
+                <div className='d-flex align-items-center justify-content-center gap-3'>
+                    <button
+                      type='button'
+                      className='border border-danger-600 bg-hover-danger-200 text-danger-600 text-md px-56 py-11 radius-8'
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      disabled={isUpdating}
+                      type='submit'
+                      className='btn btn-primary border border-primary-600 text-md px-56 py-12 radius-8'
+                    >
+                      {isUpdating ? "Saving..." : "Save"}
+                    </button>
                   </div>
-                </div>
-                <div className='form-switch switch-primary py-12 px-16 border radius-8 position-relative mb-16'>
-                  <label
-                    htmlFor='pushNotifcation'
-                    className='position-absolute w-100 h-100 start-0 top-0'
-                  />
-                  <div className='d-flex align-items-center gap-3 justify-content-between'>
-                    <span className='form-check-label line-height-1 fw-medium text-secondary-light'>
-                      Push Notification
-                    </span>
-                    <input
-                      className='form-check-input'
-                      type='checkbox'
-                      role='switch'
-                      id='pushNotifcation'
-                      defaultChecked=''
-                    />
-                  </div>
-                </div>
-                <div className='form-switch switch-primary py-12 px-16 border radius-8 position-relative mb-16'>
-                  <label
-                    htmlFor='weeklyLetters'
-                    className='position-absolute w-100 h-100 start-0 top-0'
-                  />
-                  <div className='d-flex align-items-center gap-3 justify-content-between'>
-                    <span className='form-check-label line-height-1 fw-medium text-secondary-light'>
-                      Weekly News Letters
-                    </span>
-                    <input
-                      className='form-check-input'
-                      type='checkbox'
-                      role='switch'
-                      id='weeklyLetters'
-                      defaultChecked=''
-                    />
-                  </div>
-                </div>
-                <div className='form-switch switch-primary py-12 px-16 border radius-8 position-relative mb-16'>
-                  <label
-                    htmlFor='meetUp'
-                    className='position-absolute w-100 h-100 start-0 top-0'
-                  />
-                  <div className='d-flex align-items-center gap-3 justify-content-between'>
-                    <span className='form-check-label line-height-1 fw-medium text-secondary-light'>
-                      Meetups Near you
-                    </span>
-                    <input
-                      className='form-check-input'
-                      type='checkbox'
-                      role='switch'
-                      id='meetUp'
-                    />
-                  </div>
-                </div>
-                <div className='form-switch switch-primary py-12 px-16 border radius-8 position-relative mb-16'>
-                  <label
-                    htmlFor='orderNotification'
-                    className='position-absolute w-100 h-100 start-0 top-0'
-                  />
-                  <div className='d-flex align-items-center gap-3 justify-content-between'>
-                    <span className='form-check-label line-height-1 fw-medium text-secondary-light'>
-                      Orders Notifications
-                    </span>
-                    <input
-                      className='form-check-input'
-                      type='checkbox'
-                      role='switch'
-                      id='orderNotification'
-                      defaultChecked=''
-                    />
-                  </div>
-                </div>
+                </form>
               </div>
             </div>
           </div>
