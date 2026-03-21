@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useFetchContestsQuery } from "../redux/services/contestService";
 import Loader from "./Loader";
 import { useEffect, useState } from "react";
+import { highlightText } from "../utils/helper";
 
 const baseUrl =
   import.meta.env.VITE_MODE == "DEV"
@@ -53,7 +54,7 @@ const ContestsListLayer = () => {
               type="text"
               className="bg-base h-40-px w-auto"
               name="search"
-              placeholder="Search"
+              placeholder="Search By Contest Name"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -93,8 +94,15 @@ const ContestsListLayer = () => {
           Add New Contest
         </Link>
       </div>
-      <div className="card-body p-24">
-        <div className="table-responsive scroll-sm">
+      <div className="card-body p-24 position-relative">
+        {isFetching && (
+          <div className="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center">
+            <span className="text-sm bg-white px-3 py-1 radius-8 shadow-sm">
+              Updating...
+            </span>
+          </div>
+        )}
+        <div className={`table-responsive scroll-sm ${isFetching ? "opacity-50" : ""}`}>
           <table className="table bordered-table sm-table mb-0">
             <thead>
               <tr>
@@ -139,7 +147,7 @@ const ContestsListLayer = () => {
                       {index + 1}
                     </div>
                   </td>
-                  <td>{item.name}</td>
+                  <td>{highlightText(item.name || "", debouncedSearch)}</td>
                   <td>
                     <div className="d-flex align-items-center">
                       <img
