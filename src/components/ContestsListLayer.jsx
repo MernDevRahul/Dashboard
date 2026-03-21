@@ -15,16 +15,17 @@ const ContestsListLayer = () => {
   const [status, setStatus] = useState("");
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const { data, isLoading, isFetching } = useFetchContestsQuery({
-    page,
-    limit,
-    status,
-    search: debouncedSearch,
+  const { data, isLoading, isFetching } = useFetchContestsQuery(
+    {
+      page,
+      limit,
+      status,
+      search: debouncedSearch,
     },
     {
       refetchOnMountOrArgChange: true,
-    }
-);
+    },
+  );
   console.log(data);
 
   useEffect(() => {
@@ -225,52 +226,49 @@ const ContestsListLayer = () => {
             entries
           </span>
           <ul className="pagination d-flex flex-wrap align-items-center gap-2 justify-content-center">
+            {/* Prev */}
+            <li className={`page-item ${page === 1 ? "disabled" : ""}`}>
+              <button
+                className="page-link"
+                onClick={() => setPage((prev) => prev - 1)}
+                disabled={page === 1}
+              >
+                <Icon icon="ep:d-arrow-left" />
+              </button>
+            </li>
 
-  {/* Prev */}
-  <li className={`page-item ${page === 1 ? "disabled" : ""}`}>
-    <button
-      className="page-link"
-      onClick={() => setPage((prev) => prev - 1)}
-      disabled={page === 1}
-    >
-      <Icon icon="ep:d-arrow-left" />
-    </button>
-  </li>
+            {/* Page Numbers */}
+            {[...Array(data?.pages || 0)].map((_, i) => {
+              const pageNumber = i + 1;
+              return (
+                <li key={pageNumber} className="page-item">
+                  <button
+                    className={`page-link ${
+                      page === pageNumber
+                        ? "bg-primary-600 text-white"
+                        : "bg-neutral-200"
+                    }`}
+                    onClick={() => setPage(pageNumber)}
+                  >
+                    {pageNumber}
+                  </button>
+                </li>
+              );
+            })}
 
-  {/* Page Numbers */}
-  {[...Array(data?.pages || 0)].map((_, i) => {
-    const pageNumber = i + 1;
-    return (
-      <li key={pageNumber} className="page-item">
-        <button
-          className={`page-link ${
-            page === pageNumber
-              ? "bg-primary-600 text-white"
-              : "bg-neutral-200"
-          }`}
-          onClick={() => setPage(pageNumber)}
-        >
-          {pageNumber}
-        </button>
-      </li>
-    );
-  })}
-
-  {/* Next */}
-  <li
-    className={`page-item ${
-      page === data?.pages ? "disabled" : ""
-    }`}
-  >
-    <button
-      className="page-link"
-      onClick={() => setPage((prev) => prev + 1)}
-      disabled={page === data?.pages}
-    >
-      <Icon icon="ep:d-arrow-right" />
-    </button>
-  </li>
-</ul>
+            {/* Next */}
+            <li
+              className={`page-item ${page === data?.pages ? "disabled" : ""}`}
+            >
+              <button
+                className="page-link"
+                onClick={() => setPage((prev) => prev + 1)}
+                disabled={page === data?.pages}
+              >
+                <Icon icon="ep:d-arrow-right" />
+              </button>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
