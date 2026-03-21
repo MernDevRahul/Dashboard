@@ -4,10 +4,16 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import ThemeToggleButton from "../helper/ThemeToggleButton";
 import { useDispatch } from "react-redux";
-import { useFetchOwnerQuery, useLogoutMutation } from "../redux/services/authService";
+import {
+  useFetchOwnerQuery,
+  useLogoutMutation,
+} from "../redux/services/authService";
 import { apiSlice } from "../redux/services/apiSlice";
 
-const baseUrl = import.meta.env.VITE_MODE == "DEV" ? import.meta.env.VITE_DEV_BASE_URL : import.meta.env.VITE_PROD_BASE_URL;
+const baseUrl =
+  import.meta.env.VITE_MODE == "DEV"
+    ? import.meta.env.VITE_DEV_BASE_URL
+    : import.meta.env.VITE_PROD_BASE_URL;
 
 const MasterLayout = ({ children }) => {
   const dispatch = useDispatch();
@@ -153,6 +159,16 @@ const MasterLayout = ({ children }) => {
               >
                 <Icon icon="mage:email" className="menu-icon" />
                 <span>DashBoard</span>
+              </NavLink>
+            </li>
+
+            <li>
+              <NavLink
+                to="/contests-list"
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon="mage:email" className="menu-icon" />
+                <span>Client List</span>
               </NavLink>
             </li>
 

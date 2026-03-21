@@ -98,6 +98,7 @@ import BlankPagePage from "./pages/BlankPagePage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ClientPage from "./pages/ClientPage";
 import ProtectedRoute from "./helper/ProtectedRoute";
+import ContestsListPage from "./pages/ContestsListPage";
 
 function App() {
   return (
@@ -235,6 +236,7 @@ function App() {
         <Route exact path="/typography" element={<TypographyPage />} />
         <Route exact path="/users-grid" element={<UsersGridPage />} />
         <Route exact path="/users-list" element={<UsersListPage />} />
+        <Route exact path="/contests-list" element={<ContestsListPage />} />
         <Route exact path="/view-details" element={<ViewDetailsPage />} />
         <Route exact path="/video-generator" element={<VideoGeneratorPage />} />
         <Route exact path="/videos" element={<VideosPage />} />
