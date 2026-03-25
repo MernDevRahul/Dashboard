@@ -1,9 +1,10 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Link } from "react-router-dom";
-import { useFetchContestsQuery } from "../redux/services/contestService";
+import { useDeleteContestMutation, useFetchContestsQuery } from "../redux/services/contestService";
 import Loader from "./Loader";
 import { useEffect, useState } from "react";
 import { highlightText } from "../utils/helper";
+import { toast } from "react-toastify";
 
 const baseUrl =
   import.meta.env.VITE_MODE == "DEV"
@@ -16,6 +17,7 @@ const ContestsListLayer = () => {
   const [status, setStatus] = useState("");
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [deleteContest] = useDeleteContestMutation();
   const { data, isLoading, isFetching } = useFetchContestsQuery(
     {
       page,
@@ -27,8 +29,6 @@ const ContestsListLayer = () => {
       refetchOnMountOrArgChange: true,
     },
   );
-  console.log(data);
-
   useEffect(() => {
     setPage(1);
   }, [debouncedSearch, status]);
@@ -40,6 +40,15 @@ const ContestsListLayer = () => {
 
     return () => clearTimeout(timer);
   }, [search]);
+
+  const handleDelete = async (id) =>{
+    try {
+      const res = await deleteContest(id).unwrap();
+      if(res.success) toast.success("Contest Deleted Successfully")
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
 
   // loading Fallback
   if (isLoading) {
@@ -84,7 +93,7 @@ const ContestsListLayer = () => {
           )}
         </div>
         <Link
-          to="/add-user"
+          to="/add-contest"
           className="btn btn-primary text-sm btn-sm px-12 py-12 radius-8 d-flex align-items-center gap-2"
         >
           <Icon
@@ -205,15 +214,16 @@ const ContestsListLayer = () => {
                           className="icon text-xl"
                         />
                       </button>
-                      <button
-                        type="button"
+                      <Link
+                        to={`/edit-contest/${item?.slug}`}
                         className="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"
                       >
                         <Icon icon="lucide:edit" className="menu-icon" />
-                      </button>
+                      </Link>
                       <button
                         type="button"
                         className="remove-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"
+                      onClick={()=> handleDelete(item._id)}
                       >
                         <Icon
                           icon="fluent:delete-24-regular"

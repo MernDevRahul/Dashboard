@@ -134,17 +134,17 @@ const MasterLayout = ({ children }) => {
         <div>
           <Link to="/" className="sidebar-logo">
             <img
-              src="assets/logo/logo.png"
+              src="/assets/logo/logo.png"
               alt="site logo"
               className="light-logo"
             />
             <img
-              src="assets/images/logo-light.png"
+              src="/assets/images/logo-light.png"
               alt="site logo"
               className="dark-logo"
             />
             <img
-              src="assets/logo/logo.png"
+              src="/assets/logo/logo.png"
               alt="site logo"
               className="logo-icon"
             />
@@ -1225,10 +1225,6 @@ const MasterLayout = ({ children }) => {
                 >
                   <Icon icon="heroicons:bars-3-solid" className="icon" />
                 </button>
-                <form className="navbar-search">
-                  <input type="text" name="search" placeholder="Search" />
-                  <Icon icon="ion:search-outline" className="icon" />
-                </form>
               </div>
             </div>
             <div className="col-auto">

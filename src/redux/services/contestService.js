@@ -13,7 +13,22 @@ export const contestService = apiSlice.injectEndpoints({
             },
             providesTags: ["Contests"],
         }),
+        addContest: builder.mutation({
+            query: (data) => ({
+                url: "contest/create",
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: ["Contests"],
+        }),
+        deleteContest: builder.mutation({
+            query: (id) =>({
+                url:`contest/delete/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags:["Contests"]
+        })
     })
 })
 
-export const { useFetchContestsQuery } = contestService;
+export const { useFetchContestsQuery, useAddContestMutation, useDeleteContestMutation } = contestService;
